@@ -16,9 +16,9 @@ import { Match, Matches } from './types/laliga.types';
 
 @Injectable()
 export class LaLigaService {
-  private supabase: SupabaseClient;
+  //private supabase: SupabaseClient;
 
-  constructor(private readonly configService: ConfigService) {
+  /*constructor(private readonly configService: ConfigService) {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const supabaseKey = this.configService.get<string>('SUPABASE_KEY');
 
@@ -29,7 +29,7 @@ export class LaLigaService {
     }
 
     this.supabase = createClient(supabaseUrl, supabaseKey);
-  }
+  }*/
 
   findAll() {
     return `This action returns all events`;
@@ -176,4 +176,20 @@ export class LaLigaService {
       }
     }
   };
+  getEventsCron = async () => {
+  	const { events, gameweek } = await this.fetchLaLigaEvents();
+      const normalizedEvents = this.normalizeTeamCrests(events);
+      const eventsWithPointsFlag = this.addPointsFlag(
+        normalizedEvents as Match[],
+      );
+
+      const eventsOK = eventsWithPointsFlag.map((event) => ({
+        ...event,
+        competition_id: 1,
+        sport_id: 1,
+        gameweek,
+      }));
+
+      return eventsOK;
+  }
 }

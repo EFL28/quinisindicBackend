@@ -12,10 +12,10 @@ import {
   currentGameweek,
   GameweekResponse,
 } from './types/currentGameweek.types';
-import { Match, Matches } from './types/events.types';
+import { Match, Matches } from './types/laliga.types';
 
 @Injectable()
-export class EventsService {
+export class LaLigaService {
   private supabase: SupabaseClient;
 
   constructor(private readonly configService: ConfigService) {
@@ -30,6 +30,7 @@ export class EventsService {
 
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
+
   findAll() {
     return `This action returns all events`;
   }

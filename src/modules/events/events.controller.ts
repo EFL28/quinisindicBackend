@@ -1,27 +1,27 @@
 import { Controller, Get } from '@nestjs/common';
-import { EventsService } from './events.service';
+import { LaLigaService } from './events.service';
 
-@Controller('events')
-export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+@Controller('la-liga')
+export class LaLigaController {
+  constructor(private readonly laligaService: LaLigaService) {}
 
   @Get()
   findAll() {
-    return this.eventsService.findAll();
+    return this.laligaService.findAll();
   }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
-  //   return this.eventsService.findOne(+id);
+  //   return this.laligaService.findOne(+id);
   // }
 
   @Get('/current-gameweek')
   getCurrentGameweek() {
-    return this.eventsService.fetchCurrentGameweek();
+    return this.laligaService.fetchCurrentGameweek();
   }
 
-  @Get('/la-liga-events')
+  @Get('/events')
   getLaLigaEvents() {
-    return this.eventsService.getEvents();
+    return this.laligaService.getEvents();
   }
 }

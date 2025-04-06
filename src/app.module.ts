@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EventsModule } from './modules/events/events.module';
+import { LaLigaModule } from './modules/events/events.module';
 
 @Module({
   imports: [
@@ -10,7 +10,7 @@ import { EventsModule } from './modules/events/events.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    EventsModule,
+    LaLigaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

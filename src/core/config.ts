@@ -1,5 +1,4 @@
-// import * as dotenv from 'dotenv';
-// dotenv.config();
+export const PORT = process.env.PORT || 4321;
 
 export const LA_LIGA_URL_PUBLIC_SERVICE =
   process.env.LA_LIGA_URL_PUBLIC_SERVICE ||

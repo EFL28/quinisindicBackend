@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LaLigaModule } from './modules/events/events.module';
+import { LaLigaModule } from './modules/la_liga/laliga.module';
 
 @Module({
   imports: [

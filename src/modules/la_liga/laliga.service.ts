@@ -7,7 +7,7 @@ import {
   LANGUAGE_AND_KEY_PUBLIC_SERVICE,
   LANGUAGE_AND_KEY_WEBVIEW,
 } from '../../core/config';
-import { laLigaCrests } from '../shared/teamCrestsNormalized';
+import { laLigaCrests } from '../shared/LaLigaCrestsNormalized';
 import {
   currentGameweek,
   GameweekResponse,

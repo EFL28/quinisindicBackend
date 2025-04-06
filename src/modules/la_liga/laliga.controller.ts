@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { LaLigaService } from './events.service';
+import { LaLigaService } from './laliga.service';
 
 @Controller('la-liga')
 export class LaLigaController {

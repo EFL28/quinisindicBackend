@@ -5,7 +5,7 @@ export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 export const LA_LIGA_URL_PUBLIC_SERVICE =
   process.env.LA_LIGA_URL_PUBLIC_SERVICE ||
-  'https://apim.laliga.com/public-service/api/v1/subscriptions/laliga-easports-2024';
+  'https://apim.laliga.com/public-service/api/v1/subscriptions';
 
 export const LANGUAGE_AND_KEY_PUBLIC_SERVICE =
   process.env.LANGUAGE_AND_KEY_PUBLIC_SERVICE ||
@@ -13,7 +13,7 @@ export const LANGUAGE_AND_KEY_PUBLIC_SERVICE =
 
 export const LA_LIGA_URL_WEBVIEW =
   process.env.LA_LIGA_URL_WEBVIEW ||
-  'https://apim.laliga.com/webview/api/web/subscriptions/laliga-easports-2024';
+  'https://apim.laliga.com/webview/api/web/subscriptions';
 
 export const LANGUAGE_AND_KEY_WEBVIEW =
   process.env.LANGUAGE_AND_KEY_WEBVIEW ||

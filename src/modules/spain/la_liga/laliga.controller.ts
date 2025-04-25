@@ -5,19 +5,9 @@ import { LaLigaService } from './laliga.service';
 export class LaLigaController {
   constructor(private readonly laligaService: LaLigaService) {}
 
-  @Get()
-  findAll() {
-    return this.laligaService.findAll();
-  }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.laligaService.findOne(+id);
-  // }
-
   @Get('/current-gameweek')
-  getCurrentGameweek() {
-    return this.laligaService.fetchCurrentGameweek();
+  getLaLigaCurrentGameweek() {
+    return this.laligaService.fetchLaLigaCurrentGameweek();
   }
 
   @Get('/events')

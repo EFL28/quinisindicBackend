@@ -2,16 +2,17 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LaLigaModule } from './modules/la_liga/laliga.module';
 import { PremierLeagueModule } from './modules/premier_league/premier_league.module';
+import { CopaDelReyModule } from './modules/spain/copa_del_rey/copadelrey.module';
+import { LaLigaModule } from './modules/spain/la_liga/laliga.module';
 
 @Module({
   imports: [
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     LaLigaModule,
+    CopaDelReyModule,
     PremierLeagueModule,
   ],
   controllers: [AppController],

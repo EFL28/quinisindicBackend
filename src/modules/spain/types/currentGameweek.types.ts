@@ -14,5 +14,6 @@ export interface GameweekResponse {
   data: {
     gameweekName: string;
     gameweek: number;
+    shortname?: string; // Optional for Copa del Rey
   };
 }

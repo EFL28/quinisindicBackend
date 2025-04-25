@@ -6,13 +6,13 @@ import {
   LA_LIGA_URL_WEBVIEW,
   LANGUAGE_AND_KEY_PUBLIC_SERVICE,
   LANGUAGE_AND_KEY_WEBVIEW,
-} from '../../core/config';
-import { laLigaCrests } from '../shared/LaLigaCrestsNormalized';
+} from '../../../core/config';
+import { laLigaCrests } from '../../shared/LaLigaCrestsNormalized';
 import {
   currentGameweek,
   GameweekResponse,
-} from './types/currentGameweek.types';
-import { Match, Matches } from './types/laliga.types';
+} from '../types/currentGameweek.types';
+import { Match, Matches } from '../types/laliga.types';
 
 @Injectable()
 export class LaLigaService {
@@ -31,17 +31,9 @@ export class LaLigaService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  findAll() {
-    return `This action returns all events`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} event`;
-  }
-
-  public async fetchCurrentGameweek(): Promise<GameweekResponse> {
+  public async fetchLaLigaCurrentGameweek(): Promise<GameweekResponse> {
     try {
-      const url = `${LA_LIGA_URL_PUBLIC_SERVICE}/current-gameweek?${LANGUAGE_AND_KEY_PUBLIC_SERVICE}`;
+      const url = `${LA_LIGA_URL_PUBLIC_SERVICE}/laliga-easports-2024/current-gameweek?${LANGUAGE_AND_KEY_PUBLIC_SERVICE}`;
 
       const response = await fetch(url);
 
@@ -68,9 +60,9 @@ export class LaLigaService {
   public async fetchLaLigaEvents() {
     const {
       data: { gameweek },
-    } = await this.fetchCurrentGameweek();
+    } = await this.fetchLaLigaCurrentGameweek();
 
-    const url = `${LA_LIGA_URL_WEBVIEW}/week/${gameweek}/matches?${LANGUAGE_AND_KEY_WEBVIEW}`;
+    const url = `${LA_LIGA_URL_WEBVIEW}/laliga-easports-2024/week/${gameweek}/matches?${LANGUAGE_AND_KEY_WEBVIEW}`;
 
     try {
       const response = await fetch(url);
@@ -81,7 +73,7 @@ export class LaLigaService {
 
       const data = (await response.json()) as Matches;
 
-      return { events: data.matches, gameweek };
+      return { matches: data.matches, gameweek };
     } catch (error) {
       console.error('Error fetching La Liga events:', error);
       throw new Error('Failed to fetch La Liga events');
@@ -142,38 +134,43 @@ export class LaLigaService {
   };
 
   getEvents = async () => {
-    const { data, error } = await this.supabase.from('events').select('*');
+    // const { data, error } = await this.supabase.from('events').select('*');
+    // console.log('Data from Supabase:', data);
 
-    // si no hay datos se recogen los eventos de la API y se guardan en la base de datos
+    // // si no hay datos se recogen los eventos de la API y se guardan en la base de datos
 
-    if (error) {
-      console.error('Error fetching events from Supabase:', error);
-      throw new Error('Failed to fetch events from Supabase');
-    }
+    // if (error) {
+    //   console.error('Error fetching events from Supabase:', error);
+    //   throw new Error('Failed to fetch events from Supabase');
+    // }
 
-    if (data.length === 0) {
-      const { events, gameweek } = await this.fetchLaLigaEvents();
-      const normalizedEvents = this.normalizeTeamCrests(events);
-      const eventsWithPointsFlag = this.addPointsFlag(
-        normalizedEvents as Match[],
-      );
+    // if (data.length === 0) {
+    const { matches, gameweek } = await this.fetchLaLigaEvents();
+    const normalizedEvents = this.normalizeTeamCrests(matches);
+    const eventsWithPointsFlag = this.addPointsFlag(
+      normalizedEvents as Match[],
+    );
 
-      const eventsOK = eventsWithPointsFlag.map((event) => ({
-        ...event,
-        competition_id: 1,
-        sport_id: 1,
-        gameweek,
-      }));
+    const eventsOK = eventsWithPointsFlag.map((event) => ({
+      ...event,
+      competition_id: 1,
+      sport_id: 1,
+      gameweek,
+    }));
 
-      // Guardar los eventos en la base de datos
-      const { error: insertError } = await this.supabase
-        .from('events')
-        .insert(eventsOK);
+    // // Guardar los eventos en la base de datos
+    // const { error: insertError } = await this.supabase
+    //   .from('events')
+    //   .insert(eventsOK);
 
-      if (insertError) {
-        console.error('Error inserting events into Supabase:', insertError);
-        throw new Error('Failed to insert events into Supabase');
-      }
-    }
+    // if (insertError) {
+    //   console.error('Error inserting events into Supabase:', insertError);
+    //   throw new Error('Failed to insert events into Supabase');
+    // }
+
+    return {
+      matches: eventsOK,
+    };
+    // }
   };
 }

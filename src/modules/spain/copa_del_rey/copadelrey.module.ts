@@ -5,5 +5,6 @@ import { CopaDelReyService } from './copadelrey.service';
 @Module({
   controllers: [CopaDelReyController],
   providers: [CopaDelReyService],
+  exports: [CopaDelReyService],
 })
 export class CopaDelReyModule {}

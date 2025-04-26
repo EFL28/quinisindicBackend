@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Redis } from 'ioredis';
 import {
   LA_LIGA_URL_PUBLIC_SERVICE,
   LA_LIGA_URL_WEBVIEW,
   LANGUAGE_AND_KEY_PUBLIC_SERVICE,
   LANGUAGE_AND_KEY_WEBVIEW,
 } from '../../../core/config';
-import { laLigaCrests } from '../../shared/LaLigaCrestsNormalized';
 import {
   currentGameweek,
   GameweekResponse,
 } from '../types/currentGameweek.types';
 import { Match, Matches } from '../types/laliga.types';
+import { addPointsFlag, normalizeTeamCrests } from '../utils/spain.utils';
 
 @Injectable()
 export class LaLigaService {
   private supabase: SupabaseClient;
+  private redis: Redis;
 
   constructor(private readonly configService: ConfigService) {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const supabaseKey = this.configService.get<string>('SUPABASE_KEY');
+    const redis = new Redis(6379, '129.153.6.63');
 
     if (!supabaseUrl || !supabaseKey) {
       throw new Error(
@@ -29,6 +32,7 @@ export class LaLigaService {
     }
 
     this.supabase = createClient(supabaseUrl, supabaseKey);
+    this.redis = redis;
   }
 
   public async fetchLaLigaCurrentGameweek(): Promise<GameweekResponse> {
@@ -80,59 +84,6 @@ export class LaLigaService {
     }
   }
 
-  addPointsFlag(matches: Match[]) {
-    return matches.map((match) => ({
-      ...match,
-      points_calculated: match.points_calculated || false,
-    }));
-  }
-
-  normalizeTeamCrests = (matches: Match[] | Match): Match[] | Match => {
-    // puede llegar un array de partidos o un solo partido
-
-    // si llega array se devuele un array de partidos con los escudos actualizados
-    if (Array.isArray(matches)) {
-      return matches.map((match) => {
-        return {
-          ...match,
-          home_team: {
-            ...match.home_team,
-            shield: {
-              ...match.home_team.shield,
-              url: laLigaCrests[match.home_team.nickname],
-            },
-          },
-          away_team: {
-            ...match.away_team,
-            shield: {
-              ...match.away_team.shield,
-              url: laLigaCrests[match.away_team.nickname],
-            },
-          },
-        };
-      });
-    }
-
-    // si llega un solo partido se devuelve un solo partido con los escudos actualizados
-    return {
-      ...matches,
-      home_team: {
-        ...matches.home_team,
-        shield: {
-          ...matches.home_team.shield,
-          url: laLigaCrests[matches.home_team.nickname],
-        },
-      },
-      away_team: {
-        ...matches.away_team,
-        shield: {
-          ...matches.away_team.shield,
-          url: laLigaCrests[matches.away_team.nickname],
-        },
-      },
-    };
-  };
-
   getEvents = async () => {
     // const { data, error } = await this.supabase.from('events').select('*');
     // console.log('Data from Supabase:', data);
@@ -146,10 +97,8 @@ export class LaLigaService {
 
     // if (data.length === 0) {
     const { matches, gameweek } = await this.fetchLaLigaEvents();
-    const normalizedEvents = this.normalizeTeamCrests(matches);
-    const eventsWithPointsFlag = this.addPointsFlag(
-      normalizedEvents as Match[],
-    );
+    const normalizedEvents = normalizeTeamCrests(matches);
+    const eventsWithPointsFlag = addPointsFlag(normalizedEvents as Match[]);
 
     const eventsOK = eventsWithPointsFlag.map((event) => ({
       ...event,
@@ -172,5 +121,20 @@ export class LaLigaService {
       matches: eventsOK,
     };
     // }
+  };
+
+  getRedis = async () => {
+    const redis_result = await this.redis.get('la_liga', (err, result) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(result); // Printa el array de aprtidos
+      }
+    });
+
+    const parsed = JSON.parse(redis_result as string) as Match[];
+    console.log('Parsed Redis value:', parsed);
+
+    return parsed;
   };
 }

@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   LA_LIGA_URL_PUBLIC_SERVICE,
   LA_LIGA_URL_WEBVIEW,
@@ -174,19 +172,19 @@ export class LaLigaService {
     // }
   };
   getEventsCron = async () => {
-  	const { events, gameweek } = await this.fetchLaLigaEvents();
-      const normalizedEvents = this.normalizeTeamCrests(events);
-      const eventsWithPointsFlag = this.addPointsFlag(
-        normalizedEvents as Match[],
-      );
+    const { matches, gameweek } = await this.fetchLaLigaEvents();
+    const normalizedEvents = this.normalizeTeamCrests(matches);
+    const eventsWithPointsFlag = this.addPointsFlag(
+      normalizedEvents as Match[],
+    );
 
-      const eventsOK = eventsWithPointsFlag.map((event) => ({
-        ...event,
-        competition_id: 1,
-        sport_id: 1,
-        gameweek,
-      }));
+    const eventsOK = eventsWithPointsFlag.map((event) => ({
+      ...event,
+      competition_id: 1,
+      sport_id: 1,
+      gameweek,
+    }));
 
-      return eventsOK;
-  }
+    return eventsOK;
+  };
 }

@@ -5,10 +5,10 @@ export interface Matches {
 export type MatchStatus =
   | 'PreMatch'
   | 'Canceled'
-  | 'FullTime'
   | 'FirstHalf'
   | 'HalfTime'
-  | 'SecondHalf';
+  | 'SecondHalf'
+  | 'FullTime';
 
 export interface Match {
   id: number;

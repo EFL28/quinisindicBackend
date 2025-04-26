@@ -13,5 +13,6 @@ copa_data['last_fecthed'] = Date.now();
 console.log(liga_data);
 console.log(copa_data);
 await redis.set('la_liga', JSON.stringify(liga_data));
+await redis.set('copa_del_rey', JSON.stringify(copa_data));
 console.log('Data fetched');
 await redis.quit();

@@ -37,6 +37,33 @@ export interface Match {
   points_calculated?: boolean;
 }
 
+export interface MatchForDB {
+  id: number;
+  name: string;
+  slug: string;
+  date: string;
+  time: string;
+  hashtag: string;
+  home_score?: number;
+  away_score?: number;
+  status: MatchStatus;
+  home_team: Team;
+  away_team: Team;
+  venue: Venue;
+  persons_role: Personsrole[];
+  subscription: Subscription;
+  is_brand_day: boolean;
+  temperature: Temperature;
+  ball: Ball;
+
+  attempt_official?: boolean;
+  opta_id?: string;
+  season?: Season;
+  gameweek?: Gameweek;
+  competition?: Competition;
+  points_calculated?: boolean;
+}
+
 export interface Competition {
   id: number;
   name: string;

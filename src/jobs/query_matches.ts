@@ -1,10 +1,17 @@
-import { LaLigaService } from '../modules/la_liga/laliga.service';
-import { Redis } from "ioredis"
+import { Redis } from 'ioredis';
+import { CopaDelReyService } from 'src/modules/spain/copa_del_rey/copadelrey.service';
+import { LaLigaService } from '../modules/spain/la_liga/laliga.service';
 const redis = new Redis();
-const service = new LaLigaService();
-const liga_data = await service.getEventsCron();
-liga_data['last_fecthed'] = Date.now()
-console.log(liga_data)
-await redis.set("la_liga", JSON.stringify(liga_data))
-console.log("Data fetched")
+
+const laLigaService = new LaLigaService();
+const copaService = new CopaDelReyService();
+
+const liga_data = await laLigaService.getEventsCron();
+const copa_data = await copaService.getEventsCron();
+liga_data['last_fecthed'] = Date.now();
+copa_data['last_fecthed'] = Date.now();
+console.log(liga_data);
+console.log(copa_data);
+await redis.set('la_liga', JSON.stringify(liga_data));
+console.log('Data fetched');
 await redis.quit();

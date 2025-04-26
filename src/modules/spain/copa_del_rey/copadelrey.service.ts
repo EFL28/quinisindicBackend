@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Redis from 'ioredis';
 import {
   LA_LIGA_URL_PUBLIC_SERVICE,
@@ -17,21 +15,21 @@ import { addPointsFlag, normalizeTeamCrests } from '../utils/spain.utils';
 
 @Injectable()
 export class CopaDelReyService {
-  private supabase: SupabaseClient;
+  // private supabase: SupabaseClient;
   private redis: Redis;
 
-  constructor(private readonly configService: ConfigService) {
-    const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
-    const supabaseKey = this.configService.get<string>('SUPABASE_KEY');
+  constructor() {
+    // const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
+    // const supabaseKey = this.configService.get<string>('SUPABASE_KEY');
     const redis = new Redis(6379, '129.153.6.63');
 
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error(
-        'Las variables SUPABASE_URL o SUPABASE_KEY no están definidas.',
-      );
-    }
+    // if (!supabaseUrl || !supabaseKey) {
+    //   throw new Error(
+    //     'Las variables SUPABASE_URL o SUPABASE_KEY no están definidas.',
+    //   );
+    // }
 
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    // this.supabase = createClient(supabaseUrl, supabaseKey);
     this.redis = redis;
   }
 
